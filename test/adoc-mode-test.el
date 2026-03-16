@@ -1035,6 +1035,83 @@ Don't use it for anything real.")
   ;; when a complicated test fails one knows that the simple things do work
   (ert-run-tests-interactively "^adoctest-test-"))
 
+;;;; adoc-insert-list-item tests
+
+(defmacro adoctest-with-list-buffer (content &rest body)
+  "Evaluate BODY in a temp adoc-mode buffer pre-populated with CONTENT.
+CONTENT is a string where \"|\" marks the initial point position."
+  (declare (indent 1))
+  `(with-temp-buffer
+     (adoc-mode)
+     (let ((content ,content))
+       (insert (replace-regexp-in-string "|" "" content))
+       (goto-char (point-min))
+       (search-forward "|" nil t (length (replace-regexp-in-string "[^|]" "" content)))
+       ;; move to the position of the marker in original content
+       (goto-char (point-min))
+       (let ((pipe-pos (string-search "|" ,content)))
+         (when pipe-pos
+           (goto-char (1+ pipe-pos)))))
+     ,@body))
+
+(defun adoctest-test-insert-list-item--helper (initial expected)
+  "Insert list item from INITIAL (with | as point) and compare to EXPECTED."
+  (with-temp-buffer
+    (adoc-mode)
+    (let ((pipe-pos (string-search "|" initial)))
+      (insert (replace-regexp-in-string "|" "" initial))
+      (goto-char (1+ pipe-pos)))
+    (adoc-insert-list-item)
+    (should (equal (buffer-string) expected))))
+
+(ert-deftest adoctest-test-insert-list-item-unordered-dash ()
+  "Inserting after a `-` item produces another `- ` item."
+  (adoctest-test-insert-list-item--helper
+   "- first item|"
+   "- first item\n- "))
+
+(ert-deftest adoctest-test-insert-list-item-unordered-stars ()
+  "Inserting after a `**` item preserves the nesting marker."
+  (adoctest-test-insert-list-item--helper
+   "** nested item|"
+   "** nested item\n** "))
+
+(ert-deftest adoctest-test-insert-list-item-implicit-single-dot ()
+  "Inserting after a `.` item produces another `. ` item."
+  (adoctest-test-insert-list-item--helper
+   ". first|"
+   ". first\n. "))
+
+(ert-deftest adoctest-test-insert-list-item-implicit-triple-dot ()
+  "Inserting after a `...` item preserves the triple-dot marker."
+  (adoctest-test-insert-list-item--helper
+   "... deep item|"
+   "... deep item\n... "))
+
+(ert-deftest adoctest-test-insert-list-item-explicit-decimal ()
+  "Inserting after `3.` increments to `4.`."
+  (adoctest-test-insert-list-item--helper
+   "3. third item|"
+   "3. third item\n4. "))
+
+(ert-deftest adoctest-test-insert-list-item-explicit-alpha ()
+  "Inserting after `a.` reproduces `a.` without incrementing."
+  (adoctest-test-insert-list-item--helper
+   "a. alpha item|"
+   "a. alpha item\na. "))
+
+(ert-deftest adoctest-test-insert-list-item-not-on-list ()
+  "Inserting when not on a list item falls back to a plain newline."
+  (adoctest-test-insert-list-item--helper
+   "Just a paragraph|"
+   "Just a paragraph\n"))
+
+(ert-deftest adoctest-test-insert-list-item-blank-line-after-item ()
+  "Inserting on a blank line after a list item searches back and matches."
+  (adoctest-test-insert-list-item--helper
+   "- list item\n|"
+   "- list item\n\n- "))
+
 (provide 'adoc-mode-test)
 
 ;;; adoc-mode-test.el ends here
