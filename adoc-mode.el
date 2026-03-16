@@ -3151,6 +3151,50 @@ ITEMS is a list of (name pos . level)."
     table)
   "Syntax table to use in adoc-mode.")
 
+(defun adoc-insert-list-item ()
+  "Insert a new list item after the current one.
+Detects the list type (unordered, implicitly numbered, explicitly
+numbered) and indentation level from the current line, then
+inserts a matching item on a new line.  If point is not on a list
+item, insert a plain newline."
+  (interactive)
+  (let ((re-unordered   (adoc-re-oulisti 'adoc-unordered))
+        (re-implicit    (adoc-re-oulisti 'adoc-implicitly-numbered))
+        (re-explicit    (adoc-re-oulisti 'adoc-explicitly-numbered))
+        indent marker)
+    ;; Try current line, then search backward over blank lines
+    (save-excursion
+      (beginning-of-line)
+      (when (and (looking-at "^[ \t]*$")
+                 (not (bobp)))
+        (forward-line -1))
+      (beginning-of-line)
+      (cond
+       ((looking-at re-unordered)
+        (setq indent (match-string-no-properties 1)
+              marker (match-string-no-properties 2)))
+       ((looking-at re-implicit)
+        (setq indent (match-string-no-properties 1)
+              marker (match-string-no-properties 2)))
+       ((looking-at re-explicit)
+        (setq indent (match-string-no-properties 1)
+              marker (let ((m (match-string-no-properties 2)))
+                       (if (string-match "^\\([0-9]+\\)\\(\\.\\)$" m)
+                           (concat (number-to-string
+                                    (1+ (string-to-number (match-string 1 m))))
+                                   ".")
+                         m))))))
+    (if (not marker)
+        (newline)
+      ;; Capture text from point to end of line, delete it, then
+      ;; insert new item prefix followed by that text.
+      (let ((remainder (delete-and-extract-region (point) (line-end-position))))
+        (newline)
+        (let ((item-start (point)))
+          (insert indent marker " ")
+          (save-excursion (insert remainder))
+          (goto-char (+ item-start (length indent) (length marker) 1)))))))
+
 (defvar adoc-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-c\C-d" 'adoc-demote)
@@ -3159,6 +3203,7 @@ ITEMS is a list of (name pos . level)."
     (define-key map "\C-c\C-a" 'adoc-goto-ref-label)
     (define-key map "\C-c\C-o" 'adoc-follow-thing-at-point)
     (define-key map (kbd "M-.") 'adoc-follow-thing-at-point)
+    (define-key map (kbd "M-RET") 'adoc-insert-list-item)
     (easy-menu-define adoc-mode-menu map "Menu for adoc mode"
       `("AsciiDoc"
         ["Promote" adoc-promote]
@@ -3167,6 +3212,7 @@ ITEMS is a list of (name pos . level)."
         ["Adjust title underline" adoc-adjust-title-del]
         ["Follow thing at point" adoc-follow-thing-at-point]
         ["Goto anchor" adoc-goto-ref-label]
+        ["Insert list item" adoc-insert-list-item]
         "---"
         ;; names|wording / rough order/ help texts are from asciidoc manual
         ("Templates / cheat sheet"
