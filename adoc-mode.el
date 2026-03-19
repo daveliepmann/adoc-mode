@@ -646,8 +646,7 @@ colors/sizes/fonts upon it."
               :weight normal
               :width normal
               :foundry "unknown"))
-    (((background light)) (:foreground "gray65"))
-    (((background dark)) (:foreground "gray30")))
+    (t (:inherit shadow)))
   "Face for general meta characters and base for special meta characters.
 The default sets all face properties to a value because then it's
 easier for major mode to write font lock regular expressions."
