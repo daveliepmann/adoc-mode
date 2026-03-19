@@ -7,7 +7,7 @@
 ;; Author: Florian Kaufmann <sensorflo@gmail.com>
 ;; URL: https://github.com/bbatsov/adoc-mode
 ;; Created: 2009
-;; Version: 0.8.0
+;; Version: 0.8.1
 ;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: asciidoc, text
 ;;
