@@ -7,7 +7,7 @@
 ;; Author: Florian Kaufmann <sensorflo@gmail.com>
 ;; URL: https://github.com/bbatsov/adoc-mode
 ;; Created: 2009
-;; Version: 0.8.1
+;; Version: 0.8.2
 ;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: asciidoc, text
 ;;
@@ -46,14 +46,14 @@
 (require 'subr-x)
 (require 'adoc-mode-image)
 
-(defconst adoc-mode-version "0.8.0"
+(defconst adoc-mode-version "0.8.2"
   "adoc mode version number.")
 
 ;;;; customization
 (defgroup adoc nil "Support for editing AsciiDoc files in GNU Emacs."
   :group 'text
   :prefix "adoc-"
-  :version "0.8.0"
+  :version "0.8.2"
   :link '(url-link "https://github.com/bbatsov/adoc-mode"))
 
 (defcustom adoc-script-raise '(-0.3 0.3)
@@ -252,7 +252,7 @@ are fontified natively regardless of their size."
                  (integer :tag "limited to")
                  (boolean :tag "unlimited"))
   :safe (lambda (x) (or (booleanp x) (numberp x)))
-  :package-version '(adoc-mode . "0.8.0"))
+  :package-version '(adoc-mode . "0.8.2"))
 
 ;; This is based on `org-src-lang-modes' from org-src.el
 (defcustom adoc-code-lang-modes
@@ -282,7 +282,7 @@ mode to use is `tuareg-mode'."
           (cons
            (string "Language name")
            (symbol "Major mode")))
-  :package-version '(adoc-mode . "0.8.0"))
+  :package-version '(adoc-mode . "0.8.2"))
 
 (defcustom adoc-fontify-code-block-default-mode 'prog-mode
   "Default mode to use to fontify code blocks.
@@ -290,14 +290,14 @@ This mode is used when automatic detection fails, such as for
 code blocks with no language specified."
   :group 'adoc
   :type '(choice function (const :tag "None" nil))
-  :package-version '(adoc-mode . "0.8.0"))
+  :package-version '(adoc-mode . "0.8.2"))
 
 (defcustom adoc-font-lock-extend-after-change-max 5000
   "Number of chars scanned backwards for re-fontification of code block headers.
 Also used to delimit the scan for the end delimiter."
   :type 'integer
   :group 'adoc
-  :package-version '(adoc-mode . "0.8.0"))
+  :package-version '(adoc-mode . "0.8.2"))
 
 (defcustom adoc-max-image-size nil
   "Maximum width and height for displayed images.
@@ -306,7 +306,7 @@ When nil, use the actual size.  Otherwise, use ImageMagick to
 resize larger images to be of the given maximum dimensions.  This
 requires Emacs to be built with ImageMagick support."
   :group 'adoc
-  :package-version '(adoc-mode . "0.8.0")
+  :package-version '(adoc-mode . "0.8.2")
   :type '(choice
           (const :tag "Use actual image width" nil)
           (cons (choice (sexp :tag "Maximum width in pixels")
@@ -317,7 +317,7 @@ requires Emacs to be built with ImageMagick support."
 (defcustom adoc-display-images t
   "Run `adoc-display-images' in function `adoc-mode'."
   :group 'adoc
-  :package-version '(adoc-mode . "0.8.0")
+  :package-version '(adoc-mode . "0.8.2")
   :type 'boolean)
 
 

@@ -2,6 +2,12 @@
 
 ## main (unreleased)
 
+## 0.8.2 (2026-03-30)
+
+### Bugs fixed
+
+- [#66](https://github.com/bbatsov/adoc-mode/issues/66): Fix inline link recognition when link captions contain apostrophes followed by non-whitespace text.
+
 ## 0.8.0 (2026-02-21)
 
 ### New features
