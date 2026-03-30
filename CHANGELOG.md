@@ -8,6 +8,12 @@
 
 - [#66](https://github.com/bbatsov/adoc-mode/issues/66): Fix inline link recognition when link captions contain apostrophes followed by non-whitespace text.
 
+## 0.8.1 (2026-03-19)
+
+### New features
+
+- Add `adoc-insert-list-item` for continuing/inserting list items, bound to `M-RET`.
+
 ## 0.8.0 (2026-02-21)
 
 ### New features
