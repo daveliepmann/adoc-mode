@@ -1839,7 +1839,7 @@ TARGET-META-P is non-nil, the target text is considered to be
 meta characters.
 TEXTPROPS is an additional plist with textproperties."
   (list
-   `(lambda (end) (adoc-kwf-std end ,(adoc-re-inline-macro cmd-name nil unconstrained attribute-list-constraints) '(1 2 4 5) '(0)))
+   `(lambda (end) (adoc-kwf-std end ,(adoc-re-inline-macro cmd-name nil unconstrained attribute-list-constraints) '(1 2 4 6) '(0)))
    `(0 '(face nil . ,textprops) t)
    `(1 '(face ,(or cmd-face adoc-command-face) adoc-reserved t adoc-flyspell-ignore t) t) ; cmd-name
    `(2 '(face adoc-meta-face adoc-reserved t . ,textprops) t)                   ; :
@@ -1862,7 +1862,7 @@ TEXTPROPS is an additional plist with textproperties."
 (defun adoc-kw-inline-macro-urls-attribute-list ()
   (let ((cmd-name (regexp-opt '("http" "https" "ftp" "file" "irc" "mailto" "callto" "link"))))
     (list
-     `(lambda (end) (adoc-kwf-std end ,(adoc-re-inline-macro cmd-name) '(0) '(0)))
+     `(lambda (end) (adoc-kwf-std end ,(adoc-re-inline-macro cmd-name) '(1 2 3 4 6) '(0)))
      `(1 '(face adoc-internal-reference-face adoc-reserved t adoc-flyspell-ignore t) t) ; cmd-name
      `(2 '(face adoc-internal-reference-face adoc-reserved t) t) ; :
      `(3 '(face adoc-internal-reference-face adoc-reserved t adoc-flyspell-ignore t) t) ; target

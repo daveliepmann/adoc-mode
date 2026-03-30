@@ -729,6 +729,10 @@ Don't use it for anything real.")
                   "sit,\namet,\nconsectetur" adoc-reference-face
                   "]" adoc-meta-face
                   " bar \n" nil
+                  ;; apostrophe substitutions inside link text must not break link recognition
+                  "http://www.lorem.com/ipsum.html" adoc-internal-reference-face
+                  "[" adoc-meta-face "foo's bar" adoc-reference-face "]" adoc-meta-face
+                  " baz \n" nil
                   ;; url inline macro withOUT attriblist
                   "http://www.lorem.com/ipsum.html" adoc-reference-face
                   "[]" adoc-meta-face
